@@ -38,13 +38,14 @@ class Login extends BaseController
 
             $respuesta = array(
                 "Ok"=>true,
+                'usuario' => $datos,
                 //"Token"=>$token,
                 //"decode"=>decodeToken($token),
                 //"fecha"=>$now
             );
 
             $this->response->setStatusCode(200,'Autorizado');
-            //return $this->response->setJSON($respuesta);
+            return $this->response->setJSON($respuesta);
             //return view('dashboard');
         }else{
             $this->response->setStatusCode(401,'No autorizado');
@@ -66,7 +67,7 @@ class Login extends BaseController
         $datos=$query->getResult();
     
         if($resultado>0){
-            $this->response->setStatusCode(401,'EL correo ya existe, proporcione uno diferente');
+            $this->response->setStatusCode(401,'El correo ya existe, proporcione uno diferente');
         }else{
             try {
                 $query=$this->$db->query("INSERT INTO usuario(nombre,correo,clave) values('".$nombre."','".$usuario."','".$pass."')");
