@@ -70,7 +70,7 @@ class Pokemon extends BaseController
     }
 
     public function isfavorito($usuarioid,$pokemonid){
-        $query = $this->$db->query("SELECT * FROM favoritos WHERE usuarioid=".$usuarioid." AND ".$pokemonid."");
+        $query = $this->$db->query("SELECT * FROM favoritos WHERE usuarioid=".$usuarioid." AND numero_pokedex=".$pokemonid."");
         $resultado = $query->getNumRows();
         if($resultado>0){
             $this->response->setStatusCode(200);
@@ -89,6 +89,21 @@ class Pokemon extends BaseController
             //throw $th;
         }
         
+    }
+
+    public function listfavoritos($usuarioid){
+        $favoritos = $this->$db->query("SELECT p.* FROM pokemon p
+        INNER JOIN favoritos fvs ON  p.numero_pokedex=fvs.numero_pokedex
+        WHERE usuarioid=".$usuarioid."");
+        $respuesta = array(
+            'error' => FALSE,
+            'mensaje' => 'pokemons favoritos mostrados correctamente',
+            'total_registros' => count($favoritos->getResult()),
+            'pokemons' => $favoritos->getResult(),
+            //'tipo' => $tipo->getResult(),
+            //'movimientos' => $movimientos->getResult()
+        );
+        return $this->response->setJSON($respuesta);
     }
 
 }

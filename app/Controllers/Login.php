@@ -77,4 +77,30 @@ class Login extends BaseController
             }
         }
     }
+
+    public function cambiarPW(){
+
+        $requestBody = json_decode($this->request->getBody());
+
+        $correo=$requestBody->Correo;
+        $pass=$requestBody->Clave;
+        $newpass=$requestBody->NClave;
+
+        $pass = Encrypt($pass);
+        $newpass = Encrypt($newpass);
+
+        $query = $this->$db->query("SELECT * FROM usuario WHERE correo='".$correo."' AND clave='".$pass."'");
+
+        $resultado = $query->getNumRows();
+    
+        if($resultado>0){
+
+            $cambiopw = $this->$db->query("UPDATE usuario SET clave='".$newpass."'");
+            $this->response->setStatusCode(200,'Cambio de contraseña exitoso');
+            
+        }else{
+            $this->response->setStatusCode(401,'No fue posible hacer el cambio de contraseña');
+        }
+
+    }
 }
